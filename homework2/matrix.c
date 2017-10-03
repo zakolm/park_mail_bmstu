@@ -1,21 +1,46 @@
 #include "matrix.h"
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+static int count_numbers_in_line(FILE *file) {
+	long address = ftell(file);
+	int count = 0;
+	char item, prev_item = 0;
+
+	while (!feof(file) && (item = fgetc(file)) != '\n') {
+		if (!isspace(item)) {
+			if (prev_item == 0 || isspace(prev_item)) {
+				count++;
+			}
+		}
+		prev_item = item;
+	}
+	fseek(file, address, SEEK_SET);
+
+	return count;
+}
 
 Matrix* create_matrix(int row, int col) {
-	// новый эл-нт
-	Matrix *matrix = malloc(sizeof(*matrix));
+	// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ-пїЅпїЅ
+	Matrix *matrix;
+	matrix = (Matrix*) malloc(sizeof(Matrix));
 	if ( !matrix ) {
 		return NULL;
 	}
-	// заполняем размер + выделяем память для массива на указатели.
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ + пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 	matrix->columns = col; matrix->rows = row;
-	matrix->data = malloc(sizeof(matrix->data)*row);
-	if ( !matrix ) {
+	matrix->data = (double**) calloc(row, sizeof(double*));
+	if ( !(matrix->data) ) {
+		free(matrix);
 		return NULL;
 	}
-	// выделяем память на для массивов.
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 	for ( int i = 0; i < row; ++i ) {
-		matrix->data[i] = malloc(sizeof(matrix->data)*col);
-		if ( !matrix ) {
+		matrix->data[i] = (double*) calloc(col, sizeof(double));
+		if ( !(matrix->data[i]) ) {
+			free(matrix->data);
+			free(matrix);
 			return NULL;
 		}
 	}
@@ -31,20 +56,24 @@ Matrix* create_matrix_from_file(FILE* file) {
 	if ( !matrix ) {
 		return NULL;
 	}
-	// считываем \n или проверяем на конец файла
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ \n пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 	while( fgetc(file) != '\n' && !feof(file) );
 	if (feof(file)) {
+		free_matrix(matrix);
 		return NULL;
 	}
 
 	row = 0; col = 0;
 	while( !feof(file) ) {
-		// если нашим условиям не удовлетворяет, то перестаем читать и выдаем ошибку.
+		// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
 		if ( (row+1) > matrix->rows ) {
+			free_matrix(matrix);
 			return NULL;
 		}
-		int numbers_count_in_line = count_numbers_in_line(file);
+		int numbers_count_in_line;
+		numbers_count_in_line = count_numbers_in_line(file);
 		if ( numbers_count_in_line != matrix->columns ) {
+			free_matrix(matrix);
 			return NULL;
 		}
 
@@ -67,24 +96,6 @@ void free_matrix(Matrix* matrix) {
 	}
 	free(matrix->data);
 	free(matrix);
-}
-
-static int count_numbers_in_line(FILE *file) {
-	long address = ftell(file);
-	int count = 0;
-	char item, prev_item = 0;
-
-	while (!feof(file) && (item = fgetc(file)) != '\n') {
-		if (!isspace(item)) {
-			if (prev_item == 0 || isspace(prev_item)) {
-				count++;
-			}
-		}
-		prev_item = item;
-	}
-	fseek(file, address, SEEK_SET);
-
-	return count;
 }
 
 double get_elem(Matrix* matrix, int row, int col) {
