@@ -44,7 +44,6 @@ void print_word_list(const list_s* new_list) {
 
 int find_word(char *word, list_s* my_list) {
 	for (; my_list; my_list = my_list->next) {
-		printf("%d", i);
 		if ( !strcmp(word, my_list->word) ){
 			my_list->count_in_text++;
 			return 0;
