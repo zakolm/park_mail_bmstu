@@ -1,16 +1,18 @@
 #ifndef __LIST__H__
 #define __LIST__H__
 
-typedef struct words_s {
-	int count;
+typedef struct list_s {
+	int count_in_text;
 	char *word;
 	struct word_s *next;
-} words_s;
+} list_s;
 
-words_s* my_sort (words_s *list, int (*cmp)(const void *, const void *));
-void print_word_list(words_s* new_list);
-int find_word(char *word, words_s* new_list);
-words_s* add_word(words_s *head, words_s *new_head);
-words_s* create_list_words(char *word);
+list_s* my_sort (list_s *list, int (*cmp)(const void *, const void *));
+void print_word_list(list_s* new_list);
+int find_word(char *word, list_s* new_list);
+list_s* add_word(list_s *head, list_s *new_head);
+list_s* create_list_words(char *word);
+void free_all(list_s *head);
+list_s* push_word(const char* word, list_s* word_list);
 
 #endif //__LIST__H__
