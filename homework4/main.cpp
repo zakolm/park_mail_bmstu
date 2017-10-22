@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 #include <string.h>
 #include <fstream>
 #include <functional>
@@ -11,56 +10,46 @@ using namespace std;
 
 
 /*
- * Разработать классы для описанных ниже объектов. Включить в класс конструкторы, конструктор копирования, деструктор,
- * методы set(...), get(...), show(...). Память под строковые поля необходимо выделять динамически.
- * Определить другие необходимые методы.
- *
- * Bus:
- * * Фамилия и инициалы водителя
- * * Номер автобуса
- * * Номер маршрута
- * * Марка
- * * Год начала эксплуатации
- * * Пробег
- *
- * Создать массив объектов. Вывести:
- * * список автобусов для заданного номера маршрута;
- * * список автобусов, которые эксплуатируются больше 10 лет;
- * * список автобусов, пробег у которых больше 10 000 км.
- */
-
+* їїїїїїїїїїї їїїїїї їїї їїїїїїїїї їїїї їїїїїїїї. їїїїїїїї ї їїїїї їїїїїїїїїїїї, їїїїїїїїїїї їїїїїїїїїїї,
+* їїїїїїїїїї, їїїїїї set(...), get(...), show(...). їїїїїї їїї їїїїїїїїї їїїї їїїїїїїїїї їїїїїїїї їїїїїїїїїїї.
+* їїїїїїїїїї їїїїїї їїїїїїїїїїї їїїїїї.
+*
+* Bus:
+**  їїїїїїї ї їїїїїїїї їїїїїїїї
+**  їїїїї їїїїїїїї
+**  їїїїї їїїїїїїї
+**  їїїїї
+**  їїї їїїїїї їїїїїїїїїїїї
+**  їїїїїї
+*
+* їїїїїїї їїїїїї їїїїїїїї. їїїїїїї:
+**  їїїїїї їїїїїїїїї їїї їїїїїїїїї їїїїїї їїїїїїїї;
+**  їїїїїї їїїїїїїїї, їїїїїїї їїїїїїїїїїїїїїї їїїїїї 10 їїї;
+**  їїїїїї їїїїїїїїї, їїїїїї ї їїїїїїї їїїїїї 10 000 її.
+*/
 
 void ShowParam(bus_s *bus, int count, const function<bool(const bus_s*)>& filter = NULL)
 {
-	bool flag = true;
-	for (int i = 0; i < count; ++i, ++bus)
-	{
-		if (filter(bus))
-		{
-			cout << "- ";
-			bus->Show();
-			cout << '\n';
-			flag = false;
-		}
-	}
+        bool flag = true;
+        for (int i = 0; i < count; ++i, ++bus)
+        {
+                if (filter(bus))
+                {
+                        cout << "- ";
+                        bus->Show();
+                        cout << '\n';
+                        flag = false;
+                }
+        }
 
-	if (flag)
-	{
-		cout << " [ Empty list ]\n";
-	}
+        if (flag)
+        {
+                cout << " [ Empty list ]\n";
+        }
 }
 
-void print_error(int rc)
-{
-	if (rc == FILE_ERROR)
-	{
-		cout << "ERROR with FILE" << endl;
-	}
-	else if (rc == INPUT_ERROR)
-	{
-		cout << "I/O ERROR" << endl;
-	}
-}
+
+void print_error(int rc);
 
 int main()
 {
@@ -82,13 +71,13 @@ int main()
 	if (flag)
 	{
 		cout << "Input file name: ";
-		char *filename = new char;
+		char *filename = new char[1024];
 		cin >> filename;
 		ifstream file(filename);
 
 		if (file.is_open())
 		{
-			char *tmp = new char;
+			char *tmp = new char[1024];
 			file >> tmp;
 			count = atoi(tmp);
 			buses = new bus_s[count];
@@ -96,7 +85,7 @@ int main()
 			if (count != 0)
 				readFromFile(file, buses, count);
 
-			delete tmp;
+			delete[] tmp;
 		}
 		else
 		{
@@ -104,14 +93,15 @@ int main()
 			rc = FILE_ERROR;
 		}
 
-		delete filename;
+		delete[] filename;
 		file.close();
 	}
 	else
 	{
-		cout << "Enter count of buses: ";
+		cout << "Enter amount of buses: ";
 		cin >> count;
-		buses = new bus_s[count];
+		if (count)
+			buses = new bus_s[count];
 		readFromStream(cin, buses, count);
 	}
 
@@ -121,6 +111,8 @@ int main()
 	}
 	else if (count > 0)
 	{
+		cout << "-----------------------------------------------------" << endl;
+		cout << "All list:" << endl << endl;
 		for (int i = 0; i < count; ++i)
 		{
 			(*(buses+i)).Show();
@@ -128,28 +120,42 @@ int main()
 		}
 
 		cout << "-----------------------------------------------------" << endl;
-		char Route[] = "М91";
-		cout << "Search by route " << Route << endl;
+		char Route[] = "M38";
+		cout << "Search by route " << Route << ":"  << endl << endl;
 		ShowParam(buses, count, [Route](const bus_s* bus)->bool{
 			return (!strcmp(bus->GetRouteNumber(), Route));
 		});
 
 		cout << "-----------------------------------------------------" << endl;
-		cout << "More than 10 years of use:" << endl;
+		cout << "More than 10 years of use:" << endl << endl;
 		unsigned MinYearsUses = 10;
 		ShowParam(buses, count, [MinYearsUses](const bus_s* bus)->bool{
 			return ((2017-bus->GetStartUsesYear()) >= MinYearsUses);
 		});
 
 		cout << "-----------------------------------------------------" << endl;
-		cout << "The mileage is more than 10 000 km." << endl;
+		cout << "The mileage is more than 10 000 km:" << endl << endl;
 		unsigned MinMileage = 10000;
 		ShowParam(buses, count, [MinMileage](const bus_s* bus)->bool{
 			return (bus->GetMileageAuto() > MinMileage);
 		});
 
+		delete[] buses;
 	}
 
 	print_error(rc);
 	return rc;
 }
+
+void print_error(int rc)
+{
+        if (rc == FILE_ERROR)
+        {
+                cout << "ERROR with FILE" << endl;
+        }
+        else if (rc == INPUT_ERROR)
+        {
+                cout << "I/O ERROR" << endl;
+        }
+}
+

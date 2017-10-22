@@ -4,25 +4,40 @@
 
 void readFromStream(istream& stream, bus_s* array, int count)
 {
+	char firstname;
+        char *lastname = new char[1024];
+        char middlename;
+        int bus_number;
+        char *route_number = new char[1024];
+        char *brand_auto = new char[1024];
+        unsigned start_uses_year;
+        unsigned mileage_auto;
+	
 	for (int i = 0; i < count; i++, array++)
 	{
-		cout << "Enter customer (first name, last name, middle name, ";
-		cout << "bus number, route number, brand auto, start uses year, mileage auto):\n";
+		cout << "Input info:" << endl;
+		
+		cout << "last name: ";
+		stream >> lastname;
+		cout << "first name(first symbol): ";
+		stream >> firstname;
+		cout << "middle name(first symbol): ";
+		stream >> middlename;
+		
+		cout << "bus number: ";
+		stream >> bus_number;
 
-		char firstname;
-		char lastname[1024];
-		char middlename;
-		int bus_number;
-		char route_number[1024];
-		char brand_auto[1024];
-		unsigned start_uses_year;
-		unsigned mileage_auto;
+		cout << "route number: ";
+		stream >> route_number;
 
-		stream >> lastname >> firstname >> middlename;
+		cout << "brand: ";
+		stream >> brand_auto;
 
-		stream >> bus_number >> route_number >> brand_auto;
+		cout << "start uses year: ";
+		stream >> start_uses_year;
 
-		stream >> start_uses_year >> mileage_auto;
+		cout << "mileage: ";
+		stream >> mileage_auto;
 
 		array->SetName(lastname, firstname, middlename);
 		array->SetBusNumber(bus_number);
@@ -31,17 +46,20 @@ void readFromStream(istream& stream, bus_s* array, int count)
 		array->SetStartUsesYear(start_uses_year);
 		array->SetMileageAuto(mileage_auto);
 	}
+	delete[] lastname;
+	delete[] route_number;
+	delete[] brand_auto;
 }
 
 void readFromFile(ifstream &file, bus_s *array, int count_buses)
 {
-	char *tmp = new char;
-	char *lastname = new char;
+	char *tmp = new char[1024];
+	char *lastname = new char[1024];
 	char firstname;
 	char middlename;
 	int bus_number;
-	char *route_number = new char;
-	char *brand_auto = new char;
+	char *route_number = new char[1024];
+	char *brand_auto = new char[1024];
 	unsigned start_uses_year;
 	unsigned mileage_auto;
 
@@ -67,8 +85,8 @@ void readFromFile(ifstream &file, bus_s *array, int count_buses)
 		array->SetStartUsesYear(start_uses_year);
 		array->SetMileageAuto(mileage_auto);
 	}
-	delete lastname;
-	delete route_number;
-	delete brand_auto;
-	delete tmp;
+	delete[] lastname;
+	delete[] route_number;
+	delete[] brand_auto;
+	delete[] tmp;
 }

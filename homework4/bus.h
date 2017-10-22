@@ -10,7 +10,12 @@ class bus_s
 {
 public:
 	bus_s(){};
-	~bus_s(){};
+	~bus_s()
+	{
+		delete[] last_name;
+		delete[] route_number;
+		delete[] brand_auto;
+	};
 
 	void SetLastName(char *LastName)
 	{
@@ -39,9 +44,8 @@ public:
 		return middle_name;
 	}
 
-	void SetName(char* LastName, char FirstName, char MiddleName)//Name new_name)
+	void SetName(char* LastName, char FirstName, char MiddleName)
 	{
-		//cout << LastName << FirstName << MiddleName << endl;
 		SetLastName(LastName);
 		SetFirstName(FirstName);
 		SetMiddleName(MiddleName);
@@ -94,39 +98,38 @@ public:
 
 	void Show() const
 	{
-		cout << "Ф.И.О. водителя: ";
-		//cout << GetName();
-		cout << GetLastName() << '.' << GetFirstName() << '.' << GetMiddleName();
-		cout << '\n';
+		cout << "Lastname(Initials): ";
+		cout << GetLastName() << ' ' << GetFirstName() << '.' << GetMiddleName();
+		cout << endl;
 
-		cout << "Номер автобуса: ";
+		cout << "Bus number: ";
 		cout << GetBusNumber();
-		cout << '\n';
+		cout << endl;
 
-		cout << "Номер маршрута: ";
+		cout << "Route: ";
 		cout << GetRouteNumber();
-		cout << '\n';
+		cout << endl;
 
-		cout << "Марка автомобиля: ";
+		cout << "Brand: ";
 		cout << GetBrandAuto();
-		cout << '\n';
+		cout << endl;
 
-		cout << "Год начала эксплуатации автомобиля: ";
+		cout << "Year: ";
 		cout << GetStartUsesYear();
-		cout << '\n';
+		cout << endl;
 
-		cout << "Пробег автомобиля: ";
+		cout << "Mileage: ";
 		cout << GetMileageAuto();
-		cout << '\n';
+		cout << endl;
 	}
 
 private:
-	char last_name[1024];
+	char *last_name = new char[1024];
 	char first_name;
 	char middle_name;
 	int bus_number;
-	char route_number[1024];
-	char brand_auto[1024];
+	char *route_number = new char[1024];
+	char *brand_auto = new char[1024];
 	unsigned start_uses_year;
 	unsigned mileage_auto;
 };
