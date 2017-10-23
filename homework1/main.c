@@ -14,12 +14,16 @@
  */
 
 // Мое сравнение строк, без учета регистра.
-int my_strcmp(char* a, char* b) {
-	if ( strlen(a) != strlen(b) )
+int my_strcmp(char *a, char *b)
+{
+	if (strlen(a) != strlen(b))
+	{
 		return 1;
-	int i = 0;
-	for ( ; i < strlen(a); ++i ) {
-		if ( (tolower(*(a+i)) - tolower(*(b+i))) ) {
+	}
+	for (int i = 0; i < strlen(a); ++i)
+	{
+		if ((tolower(*(a+i)) - tolower(*(b+i))))
+		{
 			return 1;
 		}
 	}
@@ -27,21 +31,24 @@ int my_strcmp(char* a, char* b) {
 }
 
 // Вывод массива вхождений для Debug
-void cout(const int* array, const int count) {
-	int j = 0;
-	for ( ; j < count; ++j ) {
+void cout(const int *array, const int count)
+{
+	for (int j = 0; j < count; ++j )
+	{
 		printf("%d %d\n", *(array+j), j);
 	}
 }
 
-int main(int argc, char** argv) {
-	if ( argc != 3 ) {
+int main(int argc, char **argv) {
+	if (argc != 3)
+	{
 		printf("./example.exe <word> <name file>\n");
 		return ERROR_INPUT;
 	}
 
-    FILE *f = fopen(*(argv+2), "r");
-    if ( !f ) {
+    FILE * f = fopen(*(argv+2), "r");
+    if (!f)
+    {
     	fprintf(stderr, "File not %s found! %s\n", *(argv+2), strerror(errno));
     	return ERROR_FILE;
     }
@@ -49,13 +56,15 @@ int main(int argc, char** argv) {
     int register_word = -1, count_sentence = 0, Max_Len_Word = 10, count_myword_in_sentensce = 0, Max_Len_Sentence = 2;
 
     int *sentence_myword = (int*) malloc(sizeof(*sentence_myword)*Max_Len_Sentence);
-    if ( !sentence_myword ) {
+    if (!sentence_myword)
+    {
 		printf("Fail with memory! I'm so sorry:(\n");
 		return ERROR_WORK_WITH_MEMORY;
-	}
+    }
 
     char *word = (char*) malloc(sizeof(*word)*Max_Len_Word), *super = *(argv+1), tmp_item_char;
-    if ( !word ) {
+    if (!word)
+    {
     	printf("Fail with memory! I'm so sorry:(\n");
     	return ERROR_WORK_WITH_MEMORY;
     }
@@ -85,10 +94,12 @@ int main(int argc, char** argv) {
 			tmp_item_char = fgetc(f); clear(register_word, word); register_word = -1;
 
 			// Увеличиваем число предложений.
-			if ( count_sentence > Max_Len_Sentence ) {
+			if ( count_sentence > Max_Len_Sentence )
+			{
 				Max_Len_Sentence *= 2;
 				sentence_myword = (int*) realloc(sentence_myword, sizeof(*sentence_myword)*Max_Len_Sentence);
-				if ( !sentence_myword ) {
+				if ( !sentence_myword )
+				{
 					printf("Fail with memory! I'm so sorry:(\n");
 					return ERROR_WORK_WITH_MEMORY;
 				}
@@ -96,15 +107,20 @@ int main(int argc, char** argv) {
 			sentence_myword[count_sentence-1] = count_myword_in_sentensce;
             count_myword_in_sentensce = 0;
 
-        } else if ( isspace(tmp_item_char) || ispunct(tmp_item_char) ) {
+        }
+	else if (isspace(tmp_item_char) || ispunct(tmp_item_char))
+	{
 
         	// Сравнивание слов после пробелов.
-        	if ( !my_strcmp(word, super) ) {
+        	if ( !my_strcmp(word, super) )
+		{
 				++count_myword_in_sentensce;
-			}
+		}
         	// Обнуление строки word.
 			clear(register_word, word); register_word = -1;
-        } else {
+        }
+	else
+	{
         	++register_word;
             *(word+register_word) = tmp_item_char;
         }
