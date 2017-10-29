@@ -27,7 +27,7 @@ using namespace std;
 **  список автобусов, пробег у которых больше 10 000 км.
 */
 
-void ShowParam(bus_s *bus, int count, const function<bool(const bus_s*)>& filter = NULL)
+void ShowParam(const bus_s *bus, int count, const function<bool(const bus_s*)>& filter = nullptr)
 {
         bool flag = true;
         for (int i = 0; i < count; ++i, ++bus)

@@ -4,16 +4,22 @@
 
 void readFromStream(istream& stream, bus_s* array, int count)
 {
+	/*
+	if (stream != cin)
+	{
+		return -1;
+	}
+	*/
 	char firstname;
-        char *lastname = new char[1024];
+        char *lastname = new char[MAX_SIZE];
         char middlename;
         int bus_number;
-        char *route_number = new char[1024];
-        char *brand_auto = new char[1024];
+        char *route_number = new char[MAX_SIZE];
+        char *brand_auto = new char[MAX_SIZE];
         unsigned start_uses_year;
         unsigned mileage_auto;
 	
-	for (int i = 0; i < count; i++, array++)
+	for (; count; count--, array++)
 	{
 		cout << "Input info:" << endl;
 		
@@ -53,13 +59,13 @@ void readFromStream(istream& stream, bus_s* array, int count)
 
 void readFromFile(ifstream &file, bus_s *array, int count_buses)
 {
-	char *tmp = new char[1024];
-	char *lastname = new char[1024];
+	char *tmp = new char[MAX_SIZE];
+	char *lastname = new char[MAX_SIZE];
 	char firstname;
 	char middlename;
 	int bus_number;
-	char *route_number = new char[1024];
-	char *brand_auto = new char[1024];
+	char *route_number = new char[MAX_SIZE];
+	char *brand_auto = new char[MAX_SIZE];
 	unsigned start_uses_year;
 	unsigned mileage_auto;
 

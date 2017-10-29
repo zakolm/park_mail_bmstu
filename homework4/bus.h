@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string.h>
 
+#define MAX_SIZE 1024
+
 using namespace std;
 
 class bus_s
@@ -17,16 +19,16 @@ public:
 		delete[] brand_auto;
 	};
 
-	void SetLastName(char *LastName)
+	void SetLastName(const char *LastName)
 	{
-		strcpy(last_name, LastName);
+		snprintf(last_name, MAX_SIZE, "%s", LastName);
 	}
 	const char *GetLastName() const
 	{
 		return last_name;
 	}
 
-	void SetFirstName(char FirstName)
+	void SetFirstName(const char FirstName)
 	{
 		first_name = FirstName;
 	}
@@ -35,7 +37,7 @@ public:
 		return first_name;
 	}
 
-	void SetMiddleName(char MiddleName)
+	void SetMiddleName(const char MiddleName)
 	{
 		middle_name = MiddleName;
 	}
@@ -44,7 +46,7 @@ public:
 		return middle_name;
 	}
 
-	void SetName(char* LastName, char FirstName, char MiddleName)
+	void SetName(const char* LastName, const char FirstName, const char MiddleName)
 	{
 		SetLastName(LastName);
 		SetFirstName(FirstName);
@@ -60,18 +62,18 @@ public:
 		return bus_number;
 	}
 
-	void SetRouteNumber(char *RouteNumber)
+	void SetRouteNumber(const char *RouteNumber)
 	{
-		strcpy(route_number, RouteNumber);
+		snprintf(route_number, MAX_SIZE, "%s", RouteNumber);
 	}
 	const char *GetRouteNumber() const
 	{
 		return route_number;
 	}
 
-	void SetBrandAuto(char *BrandAuto)
+	void SetBrandAuto(const char *BrandAuto)
 	{
-		strcpy(brand_auto, BrandAuto);
+		snprintf(brand_auto, MAX_SIZE, "%s", BrandAuto);
 	}
 	const char *GetBrandAuto() const
 	{
