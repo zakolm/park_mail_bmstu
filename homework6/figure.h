@@ -12,7 +12,7 @@ class figure
 {
     public:
         figure(){};
-        ~figure(){};
+        virtual ~figure(){};
         virtual void info(void) const = 0;
         virtual double perimeter(void) const = 0;
         virtual double square(void) const = 0;
@@ -27,21 +27,9 @@ class circle: public figure
             this->_radius = radius;
         };
         ~circle(){};
-        double perimeter(void) const
-        {
-            return (DOUBLE_PI * this->_radius);
-        }
-        double square(void) const
-        {
-            return (TWO_PI * this->_radius);
-        }
-        void info(void) const
-        {
-            cout << "CIRCLE" << endl;
-            cout << "radius: " << this->_radius  << endl;
-            cout << "perimeter: " << perimeter() << endl;
-            cout << "square: " << square();
-        }
+        double perimeter(void) const;
+        double square(void) const;
+        void info(void) const;
     private:
         double _radius = 0;
 };
@@ -57,31 +45,16 @@ class triangle: public figure
             this->_sideC = sideC;
         };
         ~triangle(){};
-        double perimeter(void) const
-        {
-            return (this->_sideA + this->_sideB + this->_sideC);
-        }
-        double square(void) const
-        {
-            double half_perimeter = perimeter();
-            half_perimeter = half_perimeter / 2;
-            double result = 0;
-            result = sqrt(half_perimeter * (half_perimeter - this->_sideA) * (half_perimeter - this->_sideB) * (half_perimeter - this->_sideC));
-            return result;
-        }
-        void info() const
-        {
-            cout << "TRIANGLE" << endl;
-            cout << "side A: " << this->_sideA << endl;
-            cout << "side B: " << this->_sideB << endl;
-            cout << "side C: " << this->_sideC << endl;
-            cout << "perimeter: " << perimeter() << endl;
-            cout << "square: " << square();
-        }
+        double perimeter(void) const;
+        double square(void) const;
+        void info(void) const;
     private:
         double _sideA = 0;
         double _sideB = 0;
         double _sideC = 0;
 };
+
+void scan_triangle(istream &cin, int count_figurs, int p_menu, figure **data);
+void scan_circle(istream &cin, int count_figurs, int p_menu, figure **data);
 
 #endif //__FIGURE__H__
