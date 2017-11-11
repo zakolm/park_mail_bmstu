@@ -5,6 +5,7 @@
 #define ERROR_MULTIPLY -1
 #define ERROR_ADDITION -2
 #define ERROR_MINUS -3
+#define ERROR_INPUT -4
 
 #define EPS 1e-5
 

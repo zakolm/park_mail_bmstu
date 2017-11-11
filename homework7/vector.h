@@ -53,30 +53,17 @@ public:
     Vector(){};
     Vector(size_t size)
     {
-        if (size <= 0)
-        {
-            throw bad_alloc();
-        }
-        
         _size = size;
         _data = new T[_size];
-        
-        if (!_data)
-        {
-            throw bad_alloc();
-        }
     };
     Vector(const Vector<T> &cv)
     {
         _size = cv._size;
         _data = new T[_size];
-         if (!_data)
+        
+        for(size_t i = 0; i < _size; ++i)
         {
-            throw bad_alloc();
-        }
-        for(size_t i = 0;i < _size; ++i)
-        {
-            _data[i]=cv._data[i];
+            _data[i] = cv._data[i];
         }
     };
     ~Vector()
@@ -88,48 +75,26 @@ public:
         double res = 0;
         for (size_t i = 0; i < this->_size; ++i)
         {
-            res += (this->_data[i]*this->_data[i]);
+            res += (this->_data[i] * this->_data[i]);
         }
         res = sqrt(res);
         return res;
     }
-    size_t GetSize(void) const
-    {
-        return _size;
-    }
     T operator*(const Vector<T> &b) const
     {
-        if (this->_size != b._size)
-        {
-            throw ERROR_MULTIPLY;//exit(-1);
-        }
-        
         return Multiply(*this, b);
     }
     Vector<T> operator*(double l)
     {
-        if (!this->_size)
-        {
-            throw ERROR_MULTIPLY;
-        }
         MultiplyConst(*this, l);
         return *this;
     }
     Vector<T> operator+(const Vector<T> &b) const
     {
-        if (this->_size != b._size)
-        {
-            cout << this->_size << " " << b._size << endl;
-            throw ERROR_ADDITION;
-        }
         return AddVectors(*this, b);
     }
     Vector<T> operator-(const Vector<T> &b) const
     {
-        if (this->_size != b._size)
-        {
-            throw ERROR_MINUS;
-        }
         return MinusVectors(*this, b);
     }
     Vector<T> operator++(int value)
@@ -166,7 +131,7 @@ public:
         }
         return *this;
     }
-    T & operator[](size_t i) const
+    T &operator[](size_t i) const
     {
         if (i < _size && i >= 0)
         {

@@ -1,9 +1,13 @@
 CC := g++
-OPTS := -std=c++11 #-Werror -Wall
+OPTS := -std=c++11 -Werror -Wall -pedantic
+CFLAGS := -O0 -fprofile-arcs -ftest-coverage
 
 app.exe: main.o 
-	$(CC) $(OPTS) $^ -o $@
+	$(CC) $(OPTS) $(CFLAGS) $^ -o $@
 %.o: %.cpp *.h
-	$(CC) $(OPTS) -c $<
+	$(CC) $(OPTS) $(CFLAGS) -c $<
 clean:
-	rm *.o *.exe
+	rm *.o *.exe *.gcda *.gcno *.gcov
+
+valgrind:
+	valgrind --tool=memcheck --leak-check=full ./app.exe
