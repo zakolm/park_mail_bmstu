@@ -9,11 +9,46 @@
 
 using namespace std;
 
-template <class T> class Vector
+template <class T>
+class Vector
 {
 private:
     size_t _size = 0;
     T* _data = NULL;
+    T Multiply(const Vector<T> &a, const Vector<T> &b) const
+    {
+        T res = 0;
+        for (size_t i = 0; i < a._size; ++i)
+        {
+            res += a._data[i] * b._data[i];
+        }
+        return res;
+    }
+    void MultiplyConst(Vector<T> &v, double l)
+    {
+        for (size_t i = 0; i < v._size; ++i)
+        {
+            v._data[i] = v._data[i] * l;
+        }
+    }
+    Vector<T> AddVectors(const Vector<T> &a, const Vector<T> &b) const
+    {
+        Vector<T> new_vector(a._size);
+        for (size_t i = 0; i < a._size; ++i)
+        {
+            new_vector._data[i] = a._data[i] + b._data[i];
+        }
+        return new_vector;
+    }
+    Vector<T> MinusVectors(const Vector<T> &a, const Vector<T> &b) const
+    {
+        Vector<T> new_vector(_size);
+        for (size_t i = 0; i < a._size; ++i)
+        {
+            new_vector._data[i] = a._data[i] - b._data[i];
+        }
+        return new_vector;
+    }
 public:
     Vector(){};
     Vector(size_t size)
@@ -31,7 +66,7 @@ public:
             throw bad_alloc();
         }
     };
-    Vector(Vector &cv)
+    Vector(const Vector<T> &cv)
     {
         _size = cv._size;
         _data = new T[_size];
@@ -39,7 +74,6 @@ public:
         {
             throw bad_alloc();
         }
-        //копирование координат
         for(size_t i = 0;i < _size; ++i)
         {
             _data[i]=cv._data[i];
@@ -69,42 +103,51 @@ public:
         {
             throw ERROR_MULTIPLY;//exit(-1);
         }
-        T res = 0;
-        for (size_t i = 0; i < this->_size; ++i)
-        {
-            res += this->_data[i] * b._data[i];
-        }
-        return res;
+        
+        return Multiply(*this, b);
     }
-    Vector<T> operator*(int l)
+    Vector<T> operator*(double l)
     {
-        for (size_t i = 0; i < this->_size; ++i)
+        if (!this->_size)
         {
-            this->_data[i] = this->_data[i] * l;
+            throw ERROR_MULTIPLY;
         }
+        MultiplyConst(*this, l);
         return *this;
     }
     Vector<T> operator+(const Vector<T> &b) const
     {
         if (this->_size != b._size)
         {
+            cout << this->_size << " " << b._size << endl;
             throw ERROR_ADDITION;
         }
-        Vector<T> new_vector(_size);
-        for (size_t i = 0; i < this->_size; ++i)
-        {
-            new_vector._data[i] = this->_data[i] + b._data[i];
-        }
-        return new_vector;
+        return AddVectors(*this, b);
     }
     Vector<T> operator-(const Vector<T> &b) const
     {
-        Vector<T> new_vector(_size);
+        if (this->_size != b._size)
+        {
+            throw ERROR_MINUS;
+        }
+        return MinusVectors(*this, b);
+    }
+    Vector<T> operator++(int value)
+    {
+        Vector<T> res(*this);
         for (size_t i = 0; i < this->_size; ++i)
         {
-            new_vector._data[i] = this->_data[i] - b._data[i];
+            this->_data[i]++;
         }
-        return new_vector;
+        return res;
+    }
+    Vector<T> operator++(void)
+    {
+        for (size_t i = 0; i < this->_size; ++i)
+        {
+            this->_data[i]++;
+        }
+        return *this;
     }
     Vector<T> operator--(int value)
     {
@@ -119,7 +162,7 @@ public:
     {
         for (size_t i = 0; i < this->_size; ++i)
         {
-            this->_data[i] = this->_data[i]--;
+            this->_data[i]--;
         }
         return *this;
     }
@@ -133,7 +176,6 @@ public:
         {
             throw out_of_range("ERROR");
         }
-        return _data[0];
     }
     friend istream & operator>>(istream &stream, Vector<T> &rs)
     {
@@ -146,29 +188,12 @@ public:
         for (size_t i = 0; i < rs._size; ++i)
         {
             stream << rs._data[i];
-            if (i != rs._size)
+            if (i != rs._size - 1)
             {
-                stream << ' ';
+                stream << ", ";
             }
         }
         return stream;
-    }
-    Vector<T> operator++(int value)
-    {
-        Vector<T> res(*this);
-        for (size_t i = 0; i < this->_size; ++i)
-        {
-            this->_data[i]++;
-        }
-        return res;
-    }
-     Vector<T>& operator++(void)
-    {
-        for (size_t i = 0; i < this->_size; ++i)
-        {
-            this->_data[i]++;
-        }
-        return *this;
     }
 };
 
