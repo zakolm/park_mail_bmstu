@@ -1,7 +1,7 @@
 CC := g++
 OPTS := -std=c++11 #-Werror -Wall
 
-app.exe: main.o vector.o
+app.exe: main.o 
 	$(CC) $(OPTS) $^ -o $@
 %.o: %.cpp *.h
 	$(CC) $(OPTS) -c $<
