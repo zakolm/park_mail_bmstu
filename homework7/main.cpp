@@ -1,9 +1,24 @@
 #include <iostream>
+#include <stdarg.h>
 
 #include "constant.h"
 #include "vector.h"
 
 using namespace std;
+
+template <class T>
+void clean_all(size_t count_vectors, Vector<T> **v, int num, ...)
+{
+    va_list list;
+    va_start(list, num);
+    size_t *next;
+    while (num--)
+    {
+        next = va_arg(list, size_t*);
+        delete[] next;
+    }
+    va_end(list);
+}
 
 int main(void)
 {
@@ -24,7 +39,7 @@ int main(void)
         size_t *pa = new size_t[count_vectors];
         if (!pa)
         {
-            delete[] v;
+            clean_all(0, v, 0);//delete[] v;
             throw bad_alloc();
         }
         
@@ -35,8 +50,9 @@ int main(void)
             cin >> count_el;
             if (!cin || !count_el)
             {
-                delete[] v;
-                delete[] pa;
+                //delete[] v;
+                //delete[] pa;
+                clean_all(0, v, 1, pa);
                 throw ERROR_INPUT;
             }
             *(pa + i) = count_el;
@@ -47,16 +63,16 @@ int main(void)
             Vector<int> *v_tmp = new Vector<int>(*(pa + i));
             if (!pa)
             {
-                for (size_t j = 0; j < i; ++j)
-                {
-                    delete *(v + j);
-                }
-                delete[] v;
-                delete[] pa;
+                clean_all(i, v, 1, pa);
                 throw bad_alloc();
             }
             cout << "Введите " << *(pa + i) << " координаты " << i + 1 << " вектора: ";
             cin >> *v_tmp;
+            if (!cin)
+            {
+                clean_all(i, v, 1, pa);
+                throw ERROR_INPUT;
+            }
             v[i] = v_tmp;//Vector<int>(count_el);
         }
     
@@ -85,9 +101,9 @@ int main(void)
         {
             if (*(pa + i) > 1)
             {
-                cout << "Изначальный вектор: " << **v << endl;
+                cout << "Изначальный вектор: " << *v[i] << endl;
                 cout << "Первый эл-нт: " << (*v[i])[0] << endl;
-                cout << "Последний эл-нт: " << (**v)[*(pa + i) - 1] << endl;
+                cout << "Последний эл-нт: " << (*v[i])[*(pa + i) - 1] << endl;
                 flag = false;
                 break;
             }
@@ -102,24 +118,13 @@ int main(void)
         size_t *index_i = new size_t[count_vectors];
         if (!index_i)
         {
-            for (size_t i = 0; i < count_vectors; ++i)
-            {
-                delete *(v + i);
-            }
-            delete[] v;
-            delete[] pa;
+            clean_all(count_vectors, v, 1, pa);
             throw bad_alloc();
         }
         size_t *index_j = new size_t[count_vectors];
         if (!index_j)
         {
-            for (size_t i = 0; i < count_vectors; ++i)
-            {
-                delete *(v + i);
-            }
-            delete[] v;
-            delete[] pa;
-            delete[] index_i;
+            clean_all(count_vectors, v, 2, pa, index_i);
             throw bad_alloc();
         }
         size_t count = 0;
@@ -166,14 +171,7 @@ int main(void)
             cout << "Нет векторов одинаковых размеров, невозможно сравнить вектора." << endl;
         }
         
-        for (size_t i = 0; i < count_vectors; ++i)
-        {
-            delete *(v + i);
-        }
-        delete[] v;
-        delete[] pa;
-        delete[] index_i;
-        delete[] index_j;
+        clean_all(count_vectors, v, 3, pa, index_i, index_j);
     }
     catch(const out_of_range& error)
     {
@@ -185,21 +183,13 @@ int main(void)
     }
     catch(const int& error)
     {
-        if (error == ERROR_MULTIPLY)
-        {
-            cerr << "\n\n" << "MultiplyError: Can not multiply these vectors or Size vectors is 0" << endl;
-        }
-        else if (error == ERROR_ADDITION)
-        {
-            cerr << "\n\n" << "AdditionError: Can not add these vectors" << endl;
-        }
-        else if (error == ERROR_MINUS)
-        {
-            cerr << "\n\n" << "MinusError: Can not deduction these vectors" << endl;
-        }
-        else if (error == ERROR_INPUT)
+        if (error == ERROR_INPUT)
         {
             cerr << "\n\n" << "SizeError: Can not use this size" << endl;
+        }
+        else
+        {
+            cerr << "\n\n" << "Unknown error" << endl;
         }
     }
     catch(...)
