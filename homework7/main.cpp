@@ -40,12 +40,13 @@ void input_vectors(size_t count_vectors, Vector<T> **v, size_t *pa)
         }
         *(pa + i) = count_el;
     }
+    
     for (size_t i = 0; i < count_vectors; ++i)
     {
-        Vector<int> *v_tmp = new Vector<int>(*(pa + i));
+        Vector<T> *v_tmp = new Vector<T>(*(pa + i));
         if (!pa)
         {
-            clean_all(i, v, 1, pa);
+            clean_all(i - 1, v, 1, pa);
             throw bad_alloc();
         }
         cout << "Введите " << *(pa + i) << " координаты " << i + 1 << " вектора: ";
