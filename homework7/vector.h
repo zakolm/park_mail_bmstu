@@ -24,7 +24,7 @@ private:
         }
         return res;
     }
-    void MultiplyConst(Vector<T> &v, double l)
+    void MultiplyConst(Vector<T> &v, T l)
     {
         for (size_t i = 0; i < v._size; ++i)
         {
@@ -84,7 +84,7 @@ public:
     {
         return ScalarMultiply(*this, b);
     }
-    Vector<T> operator*(double l)
+    Vector<T> operator*(T l)
     {
         MultiplyConst(*this, l);
         return *this;
