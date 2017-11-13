@@ -76,7 +76,11 @@ public:
     }
     T operator*(const Vector<T> &b) const
     {
-        return ScalarMultiply(*this, b);
+        if (this->_size != b._size)
+	{
+		throw ERROR_MULTIPLY_VECTORS;
+	}
+	return ScalarMultiply(*this, b);
     }
     Vector<T> operator*(T l)
     {
@@ -85,10 +89,18 @@ public:
     }
     Vector<T> operator+(const Vector<T> &b) const
     {
-        return AddVectors(*this, b);
+        if (this->_size != b._size)
+	{
+	    throw ERROR_ADD_VECTORS;
+	}
+	return AddVectors(*this, b);
     }
     Vector<T> operator-(const Vector<T> &b) const
     {
+	if (this->_size != b._size)
+	{
+	    throw ERROR_MINUS_VECTORS;
+	}
         return MinusVectors(*this, b);
     }
     Vector<T> operator++(int value)
