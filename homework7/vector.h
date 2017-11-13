@@ -15,7 +15,7 @@ class Vector
 private:
     size_t _size = 0;
     T* _data = NULL;
-    T Multiply(const Vector<T> &a, const Vector<T> &b) const
+    T ScalarMultiply(const Vector<T> &a, const Vector<T> &b) const
     {
         T res = 0;
         for (size_t i = 0; i < a._size; ++i)
@@ -82,7 +82,7 @@ public:
     }
     T operator*(const Vector<T> &b) const
     {
-        return Multiply(*this, b);
+        return ScalarMultiply(*this, b);
     }
     Vector<T> operator*(double l)
     {
