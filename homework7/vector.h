@@ -70,15 +70,9 @@ public:
     {
         delete[] _data;
     };
-    double len(void) const
+    T len(void) const
     {
-        double res = 0;
-        for (size_t i = 0; i < this->_size; ++i)
-        {
-            res += (this->_data[i] * this->_data[i]);
-        }
-        res = sqrt(res);
-        return res;
+        return ScalarMultiply(*this, *this);//res;
     }
     T operator*(const Vector<T> &b) const
     {
