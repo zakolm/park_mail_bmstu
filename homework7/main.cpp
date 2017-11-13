@@ -233,7 +233,19 @@ int main(void)
         {
             cerr << "\n\n" << "SizeError: Can not use this size" << endl;
         }
-        else
+	else if (error == ERROR_MULTIPLY_VECTORS)
+	{
+	    cerr << "\n\n" << "MultiplyError: Can not multiply these vectors" << endl;
+	}
+	else if (error == ERROR_ADD_VECTORS)
+	{
+	    cerr << "\n\n" << "AddError: Can not add these vectors" << endl;
+	}
+	else if (error == ERROR_MINUS_VECTORS)
+	{
+	    cerr << "\n\n" << "MinusError: Can not minus these vectors" << endl;
+	}
+	else
         {
             cerr << "\n\n" << "Unknown error" << endl;
         }
