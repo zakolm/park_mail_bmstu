@@ -6,6 +6,55 @@
 
 using namespace std;
 
+class Mycomplex
+{
+public:
+	double real = 0;
+	double image = 0;
+//public:
+	Mycomplex(){};
+	Mycomplex(double new_real, double new_image)
+	{
+		real = new_real;
+		image = new_image;
+	};
+	~Mycomplex(){};
+	Mycomplex operator*(const Mycomplex &b)
+	{
+		this->real *= b.real;
+		this->image *= b.image;
+		return *this;
+	}
+	Mycomplex operator+=(const Mycomplex &b)
+	{
+		//Mycomplex res;
+		this->real = this->real + b.real;
+		this->image = this->image + b.image;
+		return *this;
+	}
+	friend istream &operator>>(istream &stream, Mycomplex &b)
+	{
+		cout << "Введите действительную часть: ";
+		stream >> b.real;
+		cout << "Введите мнимую часть: ";
+		stream >> b.image;
+		return stream;
+	}
+	friend ostream &operator<<(ostream &stream, Mycomplex &b)
+	{
+		stream << b.real << ' ' << b.image;
+		return stream;
+	}
+};
+
+Mycomplex MySqrt(Mycomplex &rc)
+{
+	double real = (sqrt(sqrt(rc.real*rc.real + rc.image*rc.image) - rc.real)/2 + rc.image * sqrt(sqrt(rc.real*rc.real + rc.image*rc.image))/2);
+	double image = -real;
+	Mycomplex a(real, image);
+	return a;
+}
+
 template <class T>
 void clean_all(size_t count_vectors, Vector<T> **v, int num, ...)
 {
@@ -183,7 +232,7 @@ int main(void)
         {
             throw bad_alloc();
         }
-        size_t *pa = new size_t[count_vectors];
+	size_t *pa = new size_t[count_vectors];
         if (!pa)
         {
             clean_all(0, v, 0);//delete[] v;
@@ -218,6 +267,15 @@ int main(void)
         demo_diff_vectors(v, count, index_i, index_j);
         
         clean_all(count_vectors, v, 3, pa, index_i, index_j);
+	
+	Mycomplex a(3, 4);
+	cout << a << endl;//cout << a.real << ' ' << a.image << '\n';
+	Vector<Mycomplex> v_complex(2);
+	cout << "Input complex vector: " << endl;
+	cin >> v_complex;
+	a = v_complex.len();
+	cout << a << endl;//cout << a.real << ' ' << a.image << '\n';
+
     }
     catch(const out_of_range& error)
     {

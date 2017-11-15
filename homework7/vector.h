@@ -10,6 +10,14 @@
 using namespace std;
 
 template <class T>
+T MySqrt(T &res)
+{
+	cout << res << endl;
+	res = sqrt(res);
+	return res;
+}
+
+template <class T>
 class Vector
 {
 private:
@@ -17,7 +25,7 @@ private:
     T* _data = NULL;
     T ScalarMultiply(const Vector<T> &a, const Vector<T> &b) const
     {
-        T res = 0;
+        T res;// = 0;
         for (size_t i = 0; i < a._size; ++i)
         {
             res += a._data[i] * b._data[i];
@@ -70,9 +78,11 @@ public:
     {
         delete[] _data;
     };
+    
     T len(void) const
     {
-        return ScalarMultiply(*this, *this);//res;
+       T res = ScalarMultiply(*this, *this);
+       return MySqrt(res);//this->MySqrt(res);//res;
     }
     T operator*(const Vector<T> &b) const
     {
@@ -196,5 +206,4 @@ void col(Vector<T> &a, Vector<T> &b)
         printf("вектора не коллинеарны");
     }
 }
-
 #endif //__VECTOR__H__
